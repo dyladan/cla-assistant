@@ -30,11 +30,15 @@ global.config = require('./../config')
 // ////////////////////////////////////////////////////////////////////////////////////////////////
 
 const log = require('./services/logger')
+const health = require('./services/health')
 
 const app = express()
 const api = {}
 const webhooks = {}
 let runningWebhooks = []
+
+// Health check runs before the https redirect
+app.get('/healthcheck', (_, res) => res.sendStatus(health.healthy() ? 200 : 500))
 
 // install tracing middleware
 const tracingOptions = {}
